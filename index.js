@@ -37,7 +37,7 @@ client.once("ready", async () => {
   console.log("Ready!");
   let data = JSON.parse(
     await fs.readFile("db.json").catch((e) => {
-      return {};
+      return "{}";
     })
   );
   let targetMessage;
