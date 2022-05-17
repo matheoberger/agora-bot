@@ -25,7 +25,8 @@ const content = new TextInputComponent()
   .setCustomId("content")
   .setLabel("Quel est votre message?")
   // Paragraph means multiple lines of text.
-  .setStyle("PARAGRAPH");
+  .setStyle("PARAGRAPH")
+  .maxLength(1024);
 // An action row only holds one text input,
 // so you need one action row per text input.
 const firstActionRow = new MessageActionRow().addComponents(subject);
@@ -90,14 +91,15 @@ client.on("interactionCreate", async (interaction) => {
     content: "Votre message a bien été reçu",
     ephemeral: true,
   });
+  if (contentText.length <= 1024) {
+    const exampleEmbed = new MessageEmbed()
 
-  const exampleEmbed = new MessageEmbed()
+      .setTitle("Message anonyme")
+      .addField(subjectText, contentText)
+      .setTimestamp();
 
-    .setTitle("Message anonyme")
-    .addField(subjectText, contentText)
-    .setTimestamp();
-
-  interaction.channel.send({ embeds: [exampleEmbed] });
+    interaction.channel.send({ embeds: [exampleEmbed] });
+  }
 });
 
 client.login(token);
