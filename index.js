@@ -26,7 +26,7 @@ const content = new TextInputComponent()
   .setLabel("Quel est votre message?")
   // Paragraph means multiple lines of text.
   .setStyle("PARAGRAPH")
-  .maxLength(1024);
+  .set.setMaxLength(1024);
 // An action row only holds one text input,
 // so you need one action row per text input.
 const firstActionRow = new MessageActionRow().addComponents(subject);
