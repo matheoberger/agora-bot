@@ -4,6 +4,7 @@ const {
   Intents,
   MessageActionRow,
   MessageButton,
+  MessageEmbed,
   Modal,
   TextInputComponent,
 } = require("discord.js");
@@ -14,21 +15,21 @@ const fs = require("fs").promises;
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
 const modal = new Modal().setCustomId("myModal").setTitle("My Modal");
-const favoriteColorInput = new TextInputComponent()
-  .setCustomId("favoriteColorInput")
+const subject = new TextInputComponent()
+  .setCustomId("subject")
   // The label is the prompt the user sees for this input
-  .setLabel("What's your favorite color?")
+  .setLabel("Sujet")
   // Short means only a single line of text
   .setStyle("SHORT");
-const hobbiesInput = new TextInputComponent()
-  .setCustomId("hobbiesInput")
-  .setLabel("What's some of your favorite hobbies?")
+const content = new TextInputComponent()
+  .setCustomId("content")
+  .setLabel("Quel est votre message?")
   // Paragraph means multiple lines of text.
   .setStyle("PARAGRAPH");
 // An action row only holds one text input,
 // so you need one action row per text input.
-const firstActionRow = new MessageActionRow().addComponents(favoriteColorInput);
-const secondActionRow = new MessageActionRow().addComponents(hobbiesInput);
+const firstActionRow = new MessageActionRow().addComponents(subject);
+const secondActionRow = new MessageActionRow().addComponents(content);
 modal.addComponents(firstActionRow, secondActionRow);
 
 // When the client is ready, run this code (only once)
@@ -39,7 +40,6 @@ client.once("ready", async () => {
       return {};
     })
   );
-  console.log(data);
   let targetMessage;
   if (data.messageID) {
     targetMessage = await client.guilds
@@ -84,15 +84,20 @@ client.once("ready", async () => {
 client.on("interactionCreate", async (interaction) => {
   if (!interaction.isModalSubmit()) return;
   // Get the data entered by the user
-  const favoriteColor =
-    interaction.fields.getTextInputValue("favoriteColorInput");
-  const hobbies = interaction.fields.getTextInputValue("hobbiesInput");
-  console.log({ favoriteColor, hobbies });
+  const subjectText = interaction.fields.getTextInputValue("subject");
+  const contentText = interaction.fields.getTextInputValue("content");
   await interaction.reply({
     content: "Votre message a bien été reçu",
     ephemeral: true,
   });
-  //créer un message dans un thread ou dans le salon agora
+
+  const exampleEmbed = new MessageEmbed()
+
+    .setTitle("Message anonyme")
+    .addField(subjectText, contentText)
+    .setTimestamp();
+
+  interaction.channel.send({ embeds: [exampleEmbed] });
 });
 
 client.login(token);
