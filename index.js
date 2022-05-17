@@ -91,7 +91,7 @@ client.on("interactionCreate", async (interaction) => {
     content: "Votre message a bien été reçu",
     ephemeral: true,
   });
-  if (contentText.length <= 1024) {
+  if (contentText.length > 0 && subjectText.length > 0) {
     const exampleEmbed = new MessageEmbed()
 
       .setTitle("Message anonyme")
